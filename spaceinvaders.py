@@ -10,28 +10,30 @@ class naveEspacial(pygame.sprite.Sprite):
         self.rect=self.ImagenNave.get_rect()
         self.rect.centerx=ancho/2
         self.rect.centery=alto-30
-        self.velocidad=5
+        self.velocidad=20
         self.Vida=True
+        self.listaDisparo=[]
     def movimiento(self):
         if self.Vida==True:
             if self.rect.left<=0:
                self.rect.left=0
             elif self.rect.right>=870:
                 self.rect.right=870
-        self.listaDisparo=[]
 
-    def disparar(self):
-        print("disparo")
+
+    def disparar(self,x,y):
+        proy=Proyectil(x,y)
+        self.listaDisparo.append(proy)
     def dibujar(self,superficie):
         superficie.blit(self.ImagenNave,self.rect)
 class Proyectil(pygame.sprite.Sprite):
-    def __init__(self,posX,posY):
+    def __init__(self,posx,posy):
         pygame.sprite.Sprite.__init__(self)
         self.imageProyectil=pygame.image.load("imagenes/disparoa.jpg")
         self.rect=self.imageProyectil.get_rect()
-        self.velocidadDisparo=5
-        self.rect.top=posY
-        self.rect.left=posX
+        self.velocidadDisparo=2
+        self.rect.top=posx
+        self.rect.left=posy
     def trayectoria(self):
         self.rect.top=self.rect.top-self.velocidadDisparo
     def dibujar(self,superficie):
@@ -44,11 +46,8 @@ def SpaceInvader():
     ImagenFondo=pygame.image.load("imagenes/Fondo.jpg")
     jugador=naveEspacial()
     enJuego=True
-    demoPro=Proyectil(ancho/2,alto-30)
     while True:
         jugador.movimiento()
-        demoPro.trayectoria()
-        venta.fill((0,0,0))
         for event in pygame.event.get():
             if enJuego==True:
                 if event.type==pygame.KEYDOWN:
@@ -56,13 +55,19 @@ def SpaceInvader():
                         jugador.rect.centerx-=jugador.velocidad
                     elif event.key==K_RIGHT:
                         jugador.rect.centerx+=jugador.velocidad
-                    elif event.key==K_SPACE:
-                        jugador.disparar()
+                    elif event.key==K_s:
+                        x,y=jugador.rect.center
+                        jugador.disparar(x,y)
             if event.type==QUIT:
                 pygame.quit()
                 sys.exit()
         venta.blit(ImagenFondo,(0,0))
-        demoPro.dibujar(venta)
+        if len(jugador.listaDisparo)>0:
+            for x in jugador.listaDisparo:
+                x.dibujar(venta)
+                x.trayectoria()
+                if x.rect.top<100:
+                    jugador.listaDisparo.remove(x)
         jugador.dibujar(venta)
         pygame.display.update()
 
