@@ -12,6 +12,8 @@ class naveEspacial(pygame.sprite.Sprite):
         self.rect.centerx=ancho/2
         self.rect.centery=alto-30
         self.velocidad=20
+        #poner la ruta del archivo de sonido del disparo
+        #self.sonidoDisparo = pygame.mixer.Sound()
         self.Vida=True
         self.listaDisparo=[]
     def movimientoDerecha(self):
@@ -29,6 +31,7 @@ class naveEspacial(pygame.sprite.Sprite):
     def disparar(self,x,y):
         proy=Proyectil(x,y,"imagenes/disparoa.png",True)
         self.listaDisparo.append(proy)
+        #self.sonidoDisparo.play()
     def dibujar(self,superficie):
         superficie.blit(self.ImagenNave,self.rect)
 class Proyectil(pygame.sprite.Sprite):
@@ -50,11 +53,9 @@ class Proyectil(pygame.sprite.Sprite):
 class Invasor(pygame.sprite.Sprite):
     def __init__(self,posx,posy):
         pygame.sprite.Sprite.__init__(self)
-        self.imagenA = pygame.image.load("imagenes/marcianoA.png")
-        self.imagenB = pygame.image.load("imagenes/marcianoB.gif")
-        self.imagenC = pygame.image.load("imagenes/marcianoC.gif")
-        self.imagenD = pygame.image.load("imagenes/marcianoD.gif")
-        self.listaImagenes=[self.imagenA, self.imagenB,self.imagenC,self.imagenD]
+        self.imagenA = pygame.image.load("imagenes/MarcianoA.jpg")
+        self.imagenB = pygame.image.load("imagenes/MarcianoB.jpg")
+        self.listaImagenes=[self.imagenA, self.imagenB]
         self.posImagen=0
         self.imagenInvasor=self.listaImagenes[self.posImagen]
         self.rect=self.imagenInvasor.get_rect()
@@ -114,6 +115,9 @@ def SpaceInvader():
     venta=pygame.display.set_mode((ancho,alto))
     pygame.display.set_caption("Space Invader")
     ImagenFondo=pygame.image.load("imagenes/Fondo.jpg")
+    #poner el sonido de fondo
+    pygame.mixer.music.load("sonidos/2.mp3")
+    pygame.mixer.music.play(3)
     jugador=naveEspacial()
     enemigo = Invasor(100, 100)
     enJuego=True
@@ -155,3 +159,4 @@ def SpaceInvader():
         pygame.display.update()
 
 SpaceInvader()
+
