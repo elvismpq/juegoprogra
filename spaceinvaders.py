@@ -1,5 +1,6 @@
 import pygame,sys
 from pygame.locals import *
+from random import randint
 ancho=900
 alto=480
 
@@ -26,20 +27,24 @@ class naveEspacial(pygame.sprite.Sprite):
             elif self.rect.right>=870:
                 self.rect.right=870
     def disparar(self,x,y):
-        proy=Proyectil(x,y)
+        proy=Proyectil(x,y,"imagenes/disparoa.png",True)
         self.listaDisparo.append(proy)
     def dibujar(self,superficie):
         superficie.blit(self.ImagenNave,self.rect)
 class Proyectil(pygame.sprite.Sprite):
-    def __init__(self,posx,posy):
+    def __init__(self,posx,posy,ruta,personaje):
         pygame.sprite.Sprite.__init__(self)
-        self.imageProyectil=pygame.image.load("imagenes/disparoa.png")
+        self.imageProyectil=pygame.image.load(ruta)
         self.rect=self.imageProyectil.get_rect()
         self.velocidadDisparo=2
         self.rect.top=posy
         self.rect.left=posx
+        self.disparoPersonaje =personaje
     def trayectoria(self):
-        self.rect.top=self.rect.top-self.velocidadDisparo
+        if self.disparoPersonaje == True:
+            self.rect.top=self.rect.top-self.velocidadDisparo
+        else:
+            self.rect.top = self.rect.top + self.velocidadDisparo
     def dibujar(self,superficie):
         superficie.blit(self.imageProyectil,self.rect)
 class Invasor(pygame.sprite.Sprite):
@@ -55,17 +60,27 @@ class Invasor(pygame.sprite.Sprite):
         self.velocidad=20
         self.rect.top=posy
         self.rect.left=posx
+        self.rangoDisparo=5
         self.tiempoCambio=1
+
     def dibujar(self,superficie):
         self.imagenInvasor=self.listaImagenes[self.posImagen]
         superficie.blit(self.imagenInvasor, self.rect)
+
     def comportamiento(self,tiempo):
-          if self.tiempoCambio == tiempo:
+        if self.tiempoCambio == tiempo:
               self.posImagen +=+1
               self.tiempoCambio +=+1
               if self.posImagen >len(self.listaImagenes)-1:
                   self.posImagen=0
-
+        self._ataque()
+    def _ataque(self):
+        if (randint(0,100)<self.rangoDisparo):
+           self._disparo()
+    def _disparo(self):
+        x,y =self.rect.center
+        miProyectil=Proyectil(x,y,"imagenes/disparob.png",False)
+        self.listaDisparo.append(miProyectil)
 def SpaceInvader():
     pygame.init()
     venta=pygame.display.set_mode((ancho,alto))
@@ -96,13 +111,19 @@ def SpaceInvader():
         venta.blit(ImagenFondo,(0,0))
         enemigo.comportamiento(int(tiempo))
         enemigo.dibujar(venta)
+        jugador.dibujar(venta)
         if len(jugador.listaDisparo)>0:
             for x in jugador.listaDisparo:
                 x.dibujar(venta)
                 x.trayectoria()
-                if x.rect.top<100:
+                if x.rect.top<-10:
                     jugador.listaDisparo.remove(x)
-        jugador.dibujar(venta)
+        if len(enemigo.listaDisparo)>0:
+            for x in enemigo.listaDisparo:
+                x.dibujar(venta)
+                x.trayectoria()
+                if x.rect.top>900:
+                    enemigo.listaDisparo.remove(x)
         pygame.display.update()
 
 SpaceInvader()
