@@ -19,8 +19,6 @@ class naveEspacial(pygame.sprite.Sprite):
                self.rect.left=0
             elif self.rect.right>=870:
                 self.rect.right=870
-
-
     def disparar(self,x,y):
         proy=Proyectil(x,y)
         self.listaDisparo.append(proy)
@@ -32,8 +30,8 @@ class Proyectil(pygame.sprite.Sprite):
         self.imageProyectil=pygame.image.load("imagenes/disparoa.jpg")
         self.rect=self.imageProyectil.get_rect()
         self.velocidadDisparo=2
-        self.rect.top=posx
-        self.rect.left=posy
+        self.rect.top=posy
+        self.rect.left=posx
     def trayectoria(self):
         self.rect.top=self.rect.top-self.velocidadDisparo
     def dibujar(self,superficie):
@@ -55,8 +53,9 @@ def SpaceInvader():
                         jugador.rect.centerx-=jugador.velocidad
                     elif event.key==K_RIGHT:
                         jugador.rect.centerx+=jugador.velocidad
-                    elif event.key==K_s:
+                    elif event.key==K_SPACE:
                         x,y=jugador.rect.center
+                        print (jugador.rect.center)
                         jugador.disparar(x,y)
             if event.type==QUIT:
                 pygame.quit()
