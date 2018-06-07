@@ -50,14 +50,16 @@ class Proyectil(pygame.sprite.Sprite):
 class Invasor(pygame.sprite.Sprite):
     def __init__(self,posx,posy):
         pygame.sprite.Sprite.__init__(self)
-        self.imagenA = pygame.image.load("imagenes/MarcianoA.jpg")
-        self.imagenB = pygame.image.load("imagenes/MarcianoB.jpg")
-        self.listaImagenes=[self.imagenA, self.imagenB]
+        self.imagenA = pygame.image.load("imagenes/marcianoA.png")
+        self.imagenB = pygame.image.load("imagenes/marcianoB.gif")
+        self.imagenC = pygame.image.load("imagenes/marcianoC.gif")
+        self.imagenD = pygame.image.load("imagenes/marcianoD.gif")
+        self.listaImagenes=[self.imagenA, self.imagenB,self.imagenC,self.imagenD]
         self.posImagen=0
         self.imagenInvasor=self.listaImagenes[self.posImagen]
         self.rect=self.imagenInvasor.get_rect()
         self.listaDisparo=[]
-        self.velocidad=10 
+        self.velocidad=10
         self.rect.top=posy
         self.rect.left=posx
         self.rangoDisparo=5
@@ -153,4 +155,3 @@ def SpaceInvader():
         pygame.display.update()
 
 SpaceInvader()
-
