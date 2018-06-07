@@ -6,7 +6,7 @@ alto=480
 class naveEspacial(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.ImagenNave=pygame.image.load("imagenes/Nave.jpg")
+        self.ImagenNave=pygame.image.load("imagenes/nave.png")
         self.rect=self.ImagenNave.get_rect()
         self.rect.centerx=ancho/2
         self.rect.centery=alto-30
@@ -33,7 +33,7 @@ class naveEspacial(pygame.sprite.Sprite):
 class Proyectil(pygame.sprite.Sprite):
     def __init__(self,posx,posy):
         pygame.sprite.Sprite.__init__(self)
-        self.imageProyectil=pygame.image.load("imagenes/disparoa.jpg")
+        self.imageProyectil=pygame.image.load("imagenes/disparoa.png")
         self.rect=self.imageProyectil.get_rect()
         self.velocidadDisparo=2
         self.rect.top=posy
