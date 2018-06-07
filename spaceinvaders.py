@@ -73,7 +73,6 @@ def SpaceInvader():
                         jugador.movimientoDerecha()
                     elif event.key==K_SPACE:
                         x,y=jugador.rect.center
-                        print (jugador.rect.center)
                         jugador.disparar(x,y)
             if event.type==QUIT:
                 pygame.quit()
