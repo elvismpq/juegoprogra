@@ -13,6 +13,12 @@ class naveEspacial(pygame.sprite.Sprite):
         self.velocidad=20
         self.Vida=True
         self.listaDisparo=[]
+    def movimientoDerecha(self):
+        self.rect.right+=self.velocidad
+        self.movimiento()
+    def movimientoIzquierda(self):
+        self.rect.left-=self.velocidad
+        self.movimiento()
     def movimiento(self):
         if self.Vida==True:
             if self.rect.left<=0:
@@ -36,7 +42,17 @@ class Proyectil(pygame.sprite.Sprite):
         self.rect.top=self.rect.top-self.velocidadDisparo
     def dibujar(self,superficie):
         superficie.blit(self.imageProyectil,self.rect)
-
+class Invasor(pygame.sprite.Sprite):
+    def __init__(self,posx,posy):
+        pygame.sprite.Sprite.__init__(self)
+        self.imagenA=pygame.image.load("imagenes/MarcianoA.jpg")
+        self.rect=self.imagenA.get_rect()
+        self.listaDisparo=[]
+        self.velocidad=20
+        self.rect.top=posy
+        self.rect.left=posx
+    def dibujar(self,superficie):
+        superficie.blit(self.imagenA,self.rect)
 def SpaceInvader():
     pygame.init()
     venta=pygame.display.set_mode((ancho,alto))
@@ -44,15 +60,17 @@ def SpaceInvader():
     ImagenFondo=pygame.image.load("imagenes/Fondo.jpg")
     jugador=naveEspacial()
     enJuego=True
+    reloj=pygame.time.Clock()
+    enemigo=Invasor(100,100)
     while True:
-        jugador.movimiento()
+        reloj.tick(60)
         for event in pygame.event.get():
             if enJuego==True:
                 if event.type==pygame.KEYDOWN:
                     if event.key==K_LEFT:
-                        jugador.rect.centerx-=jugador.velocidad
+                        jugador.movimientoIzquierda()
                     elif event.key==K_RIGHT:
-                        jugador.rect.centerx+=jugador.velocidad
+                        jugador.movimientoDerecha()
                     elif event.key==K_SPACE:
                         x,y=jugador.rect.center
                         print (jugador.rect.center)
@@ -61,6 +79,7 @@ def SpaceInvader():
                 pygame.quit()
                 sys.exit()
         venta.blit(ImagenFondo,(0,0))
+        enemigo.dibujar(venta)
         if len(jugador.listaDisparo)>0:
             for x in jugador.listaDisparo:
                 x.dibujar(venta)
