@@ -45,25 +45,41 @@ class Proyectil(pygame.sprite.Sprite):
 class Invasor(pygame.sprite.Sprite):
     def __init__(self,posx,posy):
         pygame.sprite.Sprite.__init__(self)
-        self.imagenA=pygame.image.load("imagenes/MarcianoA.jpg")
-        self.rect=self.imagenA.get_rect()
+        self.imagenA = pygame.image.load("imagenes/MarcianoA.jpg")
+        self.imagenB = pygame.image.load("imagenes/MarcianoB.jpg")
+        self.listaImagenes=[self.imagenA, self.imagenB]
+        self.posImagen=0
+        self.imagenInvasor=self.listaImagenes[self.posImagen]
+        self.rect=self.imagenInvasor.get_rect()
         self.listaDisparo=[]
         self.velocidad=20
         self.rect.top=posy
         self.rect.left=posx
+        self.tiempoCambio=1
     def dibujar(self,superficie):
-        superficie.blit(self.imagenA,self.rect)
+        self.imagenInvasor=self.listaImagenes[self.posImagen]
+        superficie.blit(self.imagenInvasor, self.rect)
+    def comportamiento(self,tiempo):
+          if self.tiempoCambio == tiempo:
+              self.posImagen +=+1
+              self.tiempoCambio +=+1
+              if self.posImagen >len(self.listaImagenes)-1:
+                  self.posImagen=0
+
 def SpaceInvader():
     pygame.init()
     venta=pygame.display.set_mode((ancho,alto))
     pygame.display.set_caption("Space Invader")
     ImagenFondo=pygame.image.load("imagenes/Fondo.jpg")
     jugador=naveEspacial()
+    enemigo = Invasor(100, 100)
     enJuego=True
     reloj=pygame.time.Clock()
-    enemigo=Invasor(100,100)
+
     while True:
         reloj.tick(60)
+        #jugador movimiento
+        tiempo=int(pygame.time.get_ticks()/1000)
         for event in pygame.event.get():
             if enJuego==True:
                 if event.type==pygame.KEYDOWN:
@@ -78,6 +94,7 @@ def SpaceInvader():
                 pygame.quit()
                 sys.exit()
         venta.blit(ImagenFondo,(0,0))
+        enemigo.comportamiento(int(tiempo))
         enemigo.dibujar(venta)
         if len(jugador.listaDisparo)>0:
             for x in jugador.listaDisparo:
@@ -89,3 +106,4 @@ def SpaceInvader():
         pygame.display.update()
 
 SpaceInvader()
+
